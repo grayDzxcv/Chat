@@ -38,6 +38,7 @@ public class Client extends JFrame {
         net.send(connectionPacket.getBytes());
         console("You are trying to connect to: " + address + ", port:" + port + ", user name:" + name);
     }
+
     public void createWindow() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
