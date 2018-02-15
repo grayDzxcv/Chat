@@ -1,15 +1,26 @@
 package com.emoskvc.app;
 
-import sun.nio.ch.Net;
+import com.emoskvc.app.net.Net;
 
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-
-import java.awt.*;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import static java.lang.System.console;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
+
+
 
 public class Client extends JFrame {
 
@@ -28,7 +39,7 @@ public class Client extends JFrame {
         this.port = port;
         net = new Net(port);
 
-        connected = net.openConnectiont(address);
+        connected = net.openConnection(address);
         if (!connected) {
             System.out.println("Connection failed ...");
             console("Connection failed ...");
@@ -42,10 +53,9 @@ public class Client extends JFrame {
     public void createWindow() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
         setTitle("Messenger Client");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 550);
@@ -79,19 +89,46 @@ public class Client extends JFrame {
         txtMessage.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ACCEPT) {
-                    send(txtMessage);
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    send(txtMessage.getText());
                 }
             }
         });
+        GridBagConstraints gbc_txtMessage = new GridBagConstraints();
+        gbc_txtMessage.insets = new Insets(0, 0, 0, 5);
+        gbc_txtMessage.fill = GridBagConstraints.HORIZONTAL;
+        gbc_txtMessage.gridx = 0;
+        gbc_txtMessage.gridy = 2;
+        gbc_txtMessage.gridwidth = 2;
+        contentPane.add(txtMessage, gbc_txtMessage);
+        txtMessage.setColumns(10);
 
+        JButton btnSend = new JButton("Send");
+        btnSend.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                send(txtMessage.getText());
+            }
+        });
+        GridBagConstraints gbc_btnSend = new GridBagConstraints();
+        gbc_btnSend.insets = new Insets(0, 0, 0, 5);
+        gbc_btnSend.gridx = 2;
+        gbc_btnSend.gridy = 2;
+        contentPane.add(btnSend, gbc_btnSend);
+        setVisible(true);
 
-
-
+        txtMessage.requestFocusInWindow();
     }
 
-    public void console(String str) {
+    public void send(String message) {
+        if (message.equals("")) return;
+        message = name + ":" + message;
+        console(message);
+        txtMessage.setText("");
+    }
 
+    public void console(String message) {
+        history.setCaretPosition(history.getDocument().getLength());
+        history.append(message + "\n\r");
     }
 
 

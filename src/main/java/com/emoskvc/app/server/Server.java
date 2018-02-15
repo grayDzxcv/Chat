@@ -16,7 +16,7 @@ public class Server {
     private Thread serverRun, manage, receive;
     private boolean running = false;
 
-    public Server(int port) {
+    public Server(final int port) {
         this.port = port;
         try {
             socket = new DatagramSocket(port);

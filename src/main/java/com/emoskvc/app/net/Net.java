@@ -17,7 +17,7 @@ public class Net {
     public boolean openConnection(String address) {
         try {
             socket = new DatagramSocket();
-            ip = InetAddress.getByName(address)
+            ip = InetAddress.getByName(address);
         } catch (SocketException e) {
             e.printStackTrace();
             return false;
